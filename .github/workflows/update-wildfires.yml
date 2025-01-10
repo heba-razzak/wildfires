@@ -1,0 +1,39 @@
+name: Update Map and Timestamp
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour
+  workflow_dispatch: # Allows manual runs
+
+jobs:
+  update-map:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up R environment
+    - name: Set Up R
+      uses: r-lib/actions/setup-r@v2
+
+    # Step 3: Install R dependencies
+    - name: Install R Packages
+      run: |
+        Rscript -e "install.packages(c('sf', 'dplyr', 'dotenv', 'leaflet', 'htmlwidgets', 'ggplot2', 'lubridate', 'here'))"
+
+    # Step 4: Run the R script
+    - name: Run R Script
+      env:
+        PURPLEAIR_API_KEY: ${{ secrets.PURPLEAIR_API_KEY }}
+      run: Rscript purpleair_map.R
+
+    # Step 5: Commit and Push Updates
+    - name: Commit and Push Changes
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add maps/
+        git commit -m "Automated update of map and timestamp"
+        git push
