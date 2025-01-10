@@ -79,6 +79,8 @@ for (i in seq_along(sensor_chunks)) {
   purpleair_rawdata_list[[i]] <- chunk_data
   Sys.sleep(1)
 }
+purpleair_rawdata <- do.call(rbind, purpleair_rawdata_list)
+
 # # Download hourly data
 # purpleair_rawdata <- getSensorHistory(
 #   sensorIndex = unique(filtered_sensors_sf$sensor_index),
