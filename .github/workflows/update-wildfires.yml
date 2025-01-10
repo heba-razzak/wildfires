@@ -24,21 +24,30 @@ jobs:
     - name: Set Up R
       uses: r-lib/actions/setup-r@v2
 
-    # Step 4: Install R Packages
+    # Step 4: Cache R Packages
+    - name: Cache R Packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.R/ # Cache the R package library folder
+        key: ${{ runner.os }}-R-${{ hashFiles('**/*.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-R-
+
+    # Step 5: Install R Packages (Only installs new or missing ones)
     - name: Install R Packages
       run: |
         Rscript -e "install.packages('sf', dependencies = TRUE)"
         Rscript -e "install.packages('terra', dependencies = TRUE)"
         Rscript -e "install.packages('raster', dependencies = TRUE)"
-        Rscript -e "install.packages(c('dplyr', 'dotenv', 'leaflet', 'htmlwidgets', 'ggplot2', 'lubridate', 'here'))"
+        Rscript -e "install.packages(c('dplyr', 'dotenv', 'leaflet', 'htmlwidgets', 'ggplot2', 'lubridate', 'here', 'leaflegend', 'PurpleAirAPI'))"
 
-    # Step 5: Run the R Script
+    # Step 6: Run the R Script
     - name: Run R Script
       env:
         PURPLEAIR_API_KEY: ${{ secrets.PURPLEAIR_API_KEY }}
       run: Rscript purpleair_map.R
 
-    # Step 6: Commit and Push Changes
+    # Step 7: Commit and Push Changes
     - name: Commit and Push Changes
       run: |
         git config --global user.name "GitHub Actions"
