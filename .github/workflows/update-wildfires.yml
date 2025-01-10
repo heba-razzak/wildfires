@@ -30,7 +30,7 @@ jobs:
         Rscript -e "install.packages('sf', dependencies = TRUE)"
         Rscript -e "install.packages('terra', dependencies = TRUE)"
         Rscript -e "install.packages('raster', dependencies = TRUE)"
-        Rscript -e "install.packages(c('dplyr', 'dotenv', 'leaflet', 'htmlwidgets', 'ggplot2', 'lubridate', 'here'))"
+        Rscript -e "install.packages(c('dplyr', 'dotenv', 'leaflet', 'htmlwidgets', 'ggplot2', 'lubridate', 'here', 'leaflegend', 'PurpleAirAPI'))"
 
     # Step 5: Run the R Script
     - name: Run R Script
