@@ -1,0 +1,552 @@
+  
+<!DOCTYPE html>
+<!-- saved from url=(0027)https://earthdata.nasa.gov/ -->
+<html lang="en" xmlns:fb="http://ogp.me/ns/fb#" class="">
+    <head>  
+        <!-- Google Tag Manager -->
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WNP7MLF');</script>
+        <!-- End Google Tag Manager -->
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#630202"/>
+        <meta name='mobile-web-app-capable' content='yes'>
+        <meta name='apple-mobile-web-app-capable' content='yes'>
+        <meta name='application-name' content='NASA-FIRMS'>
+        <meta name='apple-mobile-web-app-status-bar-style' content='#630202'>
+        <meta name='apple-mobile-web-app-title' content='NASA Fire Info'>
+        <link rel='icon' sizes='192x192' href='/images/touch/icon-192x192.png'>
+        <link rel='apple-touch-icon' href='/images/touch/icon-192x192.png'>
+        <meta name='msapplication-TileImage' content='/images/touch/icon-144x144.png'>
+        <meta name='msapplication-TileColor' content='#630202'>
+        <meta name='theme-color' content='#630202'>
+        <meta property='og:title' content='NASA-FIRMS'>
+        <meta property='og:type' content='website'>
+        <meta property='og:image' content='/images/touch/icon-192x192.png'>
+        <meta property='og:url' content='https://firms.modaps.eosdis.nasa.gov/map/'>
+        <meta property='og:description' content='Fire Information for Resource Management System'>
+        <meta name='twitter:card' content='summary'>
+        <meta name='twitter:url' content='https://firms.modaps.eosdis.nasa.gov/map/'>
+        <meta name='twitter:title' content='NASA-FIRMS'>
+        <meta name='twitter:description' content='Fire Information for Resource Management System'>
+        <meta name='twitter:image' content='/images/touch/icon-192x192.png'>
+        <meta name='twitter:creator' content='@nasa'>
+        
+              <link rel="manifest" href="/content/manifest/firms.json">
+        <meta name="description" content="Global fire map and data. NASA | LANCE | Fire Information for Resource Management System provides near real-time active fire data 
+            from MODIS and VIIRS to meet the needs of firefighters, scientists and users interested in monitoring fires. 
+            Fire data is available for download or can be viewed through a map interface. Users can subscribe to email alerts bases on their area of interest.">
+        <meta name="keywords" content="fire, wildfire, fire map, map, archive fire data, fire email alerts, fire download, fire data download, California, USA, US, Canada, Indonesia, Australia, Asia, Africa, Amazon, Brazil, Europe, Siberia, Russia">
+      
+        <title>API - Area - NASA | LANCE | FIRMS</title>
+        
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400;600&display=swap" rel="stylesheet">
+        
+    </head>
+    <style> html { background: #222; font-size:10px; } </style>
+<link rel="stylesheet" href="/dist/firms_index.5fe780b1.css"><script type="module" src="/dist/firms_index.3a21f589.js"></script><script src="/dist/firms_index.30f1e6a8.js" nomodule defer></script><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+<body>
+	<div class="content">
+		<section class="mainSection">
+			<div id="content" class="">
+                <div class="pgHeader"><a href="/api">API </a> / area</div>
+				<div id="content_main">
+                    <div id='error' style=''>Error in processing: <span id='errorMsg'>Invalid format.</span></div>                    <div class="segment-group" id="searchOptions">
+                        <div class="segment">
+                            <table>
+                                <tr>
+                                    <td>
+                                        Area                                    </td>
+                                    <td>
+                                        <input id="area" type="text" placeHolder="west,south,east,north or world"  onkeyup="updateCSVUrl();" onchange="updateCSVUrl();" value="-119.5,33.5,-117.5,34.5">                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Source
+                                    </td>
+                                    <td>
+                                        <select id="source" onchange="updateCSVUrl();">
+                                            <option value="LANDSAT_NRT">LANDSAT (NRT) [US/Canada only]</option>
+                                            <option value="MODIS_NRT">MODIS (URT+NRT)</option>
+                                            <option value="MODIS_SP">MODIS (SP)</option>
+                                            <option value="VIIRS_NOAA20_NRT">VIIRS NOAA-20 (URT+NRT)</option>
+                                            <option value="VIIRS_NOAA21_NRT">VIIRS NOAA-21 (URT+NRT)</option>
+                                            <option value="VIIRS_SNPP_NRT">VIIRS S-NPP (URT+NRT)</option>
+                                            <option value="VIIRS_SNPP_SP">VIIRS S-NPP (SP)</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="segment">
+                            <table>
+                                <tr>
+                                    <td>
+                                        Date
+                                    </td>
+                                    <td>
+                                        <input id="date" type="text" placeHolder="YYYY-MM-DD or empty"  onkeyup="updateCSVUrl();" onchange="updateCSVUrl();" value="2025-01-09"> 
+                                        <br/>* empty if getting most recent data
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Day Range
+                                    </td>
+                                    <td>
+                                        <select id="range" onchange="updateCSVUrl();">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="segment">
+                            <table>
+                                <tr>
+                                    <td>
+                                        Map Key
+                                    </td>
+                                    <td>
+                                        <input type="text" id="mapkey2" maxlength="32" placeHolder="MAP KEY" value="bd700aeef375ba93fa5727b7110dc4d8" onkeyup="updateCSVUrl();" onchange="updateCSVUrl();">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="segment segment-bottom">
+                            <div id="search_btn" onclick="search();">Display Results</div>
+                        </div>
+                        <div class="segment segment-csv">
+                            <span>Click or copy link generated below for your download script.</span><br/><br/>
+                            <span id="csvUrl"></span>
+                            <span id="transactionAmount"></span>
+                        </div>
+                    </div>
+                                            <div class="segment-group" id="searching">
+                        <div class="segment segment-bottom"> ... searching ...</div>
+                    </div>
+                </div>
+                <div class="api_item_link">
+                                        <ul>
+                        <li>/api/area/csv/[MAP_KEY]/[SOURCE]/[AREA_COORDINATES]/[DAY_RANGE]</li>
+                    </ul>
+                    <div>- Get most recent data, from TODAY to TODAY - (DAY_RANGE-1)</div>
+                    <ul>
+                        <li>/api/area/csv/[MAP_KEY]/[SOURCE]/[AREA_COORDINATES]/[DAY_RANGE]/[DATE]</li>
+                    </ul>
+                    <div>- Returns data for [DATE] .. [DATE + DAY_RANGE-1]</div>
+                </div>
+                <br/>
+                <br/>
+                <div class="api_item_link">
+                    <div>
+                        <a target="_blank" class="ext" href="https://www.earthdata.nasa.gov/data/tools/firms/faq">Attribute table for LANDSAT</a><br/>
+                        <a target="_blank" class="ext" href="https://go.nasa.gov/3JSgbdb">Attribute table for MODIS</a><br/>
+                        <a target="_blank" class="ext" href="https://go.nasa.gov/3sf3ALb">Attribute table for VIIRS S-NPP</a><br/>
+                        <a target="_blank" class="ext" href="https://www.earthdata.nasa.gov/learn/find-data/near-real-time/firms/vj114imgtdlnrt">Attribute table for VIIRS NOAA-20</a><br/>
+                        <a target="_blank" class="ext" href="https://www.earthdata.nasa.gov/learn/find-data/near-real-time/firms/vj214imgtdlnrt">Attribute table for VIIRS NOAA-21</a><br/>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <div class="api_item" style="border-top:.1rem solid #AAA;">
+                    <b>SOURCE:</b>
+                    <ul>
+                        <li>LANDSAT_NRT <span class="api_item_desc">[US/Canada only] (LANDSAT Near Real-Time, Real-Time and Ultra Real-Time *)</span></li>
+                        <li>MODIS_NRT <span class="api_item_desc">(MODIS Near Real-Time, Real-Time and Ultra Real-Time *)</span></li>
+                        <li>MODIS_SP <span class="api_item_desc">(MODIS Standard Processing)</span></li>
+                        <li>VIIRS_NOAA20_NRT <span class="api_item_desc">(VIIRS NOAA-20 Near Real-Time, Real-Time and Ultra Real-Time *)</span></li>
+                        <li>VIIRS_NOAA21_NRT <span class="api_item_desc">(VIIRS NOAA-21 Near Real-Time, Real-Time and Ultra Real-Time *)</span></li>
+                        <li>VIIRS_SNPP_NRT <span class="api_item_desc">(VIIRS Suomi-NPP Near Real-Time, Real-Time and Ultra Real-Time *)</span></li>
+                        <li>VIIRS_SNPP_SP <span class="api_item_desc">(VIIRS Suomi-NPP Standard Processing)</span></li>
+                    </ul>
+                    <div>
+                            * RT and URT data are removed when corresponding NRT detections are processed or RT/URT is older than 6 hours.
+                            <br/>
+							<br/>
+							NASA EOSDIS defines Real-Time as data that is made available within 60 minutes of satellite overpass. 
+							URT is much quicker than that. FIRMS makes URT data available in less than 60 seconds of satellite fly over for much of the US and Canada<br/>
+							<a target="_blank" class="ext" href="https://wiki.earthdata.nasa.gov/display/FIRMS/2022/07/14/Wildfire+detection+in+the+US+and+Canada+within+a+minute+of+satellite+observation">Learn more about Ultra Real-Time data.</a><br/>
+                            <br/>
+                    </div>
+                </div>
+                <div class="api_item">
+                                                <b>AREA_COORDINATES:</b>
+                            <ul>
+                                <li>west,south,east,north <span class="api_item_desc">- ex. (South America): -85,-57,-32,14</span></li>
+                                <li>world <span class="api_item_desc">- [-180,-90,180,90]</span></li>
+                            </ul>
+                            <div>
+                                Maximum boundary: -180, -90, 180, 90<br/>
+                            </div>
+                                                <br/>
+                </div>
+                <div class="api_item">
+                    <b>DAY_RANGE:</b>
+                    <ul>
+                        <li>1 .. 10 <span class="api_item_desc">- number of days to query at one time</span></li>
+                    </ul>
+                </div>
+                <div class="api_item">
+                    <b>DATE:</b>
+                    <ul>
+                        <li>YYYY-MM-DD <span class="api_item_desc">- [Optional] If not provided it will return the most recent data</span></li>
+                        <li><a href="/api/data_availability/">/api/data_availability/</a> <span class="api_item_desc">- check for product date availability</span></li>
+                    </ul>
+                </div>
+                <div class="api_item">
+                    <div id="firms-mapkey" class="service">Map Key</div>
+                    <div class="examples border-bottom" style="border-bottom:.1rem solid #999;">
+    <div id="mapKey">
+        To use FIRMS web services, request <b>free</b> MAP_KEY
+        <div class="mapKeyBtn" onclick="openMapKeyMenu();">Get MAP_KEY</div>
+    </div>
+    <br/>
+    <div class="transaction">
+        To check number of available map transactions</br>
+        <input type="input" placeHolder="Your Map Key" id="mapkey"> 
+        <div class="status" onclick="checkTransaction();">Check status</div>
+        <div id="error_msg"></div>
+    </div>
+    <script>
+        function checkTransaction() {
+            let el = document.getElementById('mapkey');
+            let el2 = document.getElementById('error_msg');
+            if (el && el.value != '') {
+                el2.style.display="none";
+                if (! el.value.match(/^[0-9a-z]+$/) || el.value.length != 32) {
+                    el2.innerHTML = "Map Key value is invalid.";
+                    el2.style.display="block";
+                } else {
+                    window.location.href = '/mapserver/mapkey_status/?MAP_KEY=' + el.value;
+                }
+            } else {
+                el2.innerHTML = 'Map Key value missing.';
+                el2.style.display="block";
+            }
+        }
+    </script>
+</div>                </div>
+            </div>
+		</section>
+	</div>
+    <div id="modal_mapkey" class="modal">
+
+	<div style="position:fixed;top:0;left:0;right:0;bottom:0" onclick="modal_mmk.closeMenu();">
+	</div>
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-body" style="top:0px; padding:0 20px;">
+    	<span class="modal-close" onclick="modal_mmk.closeMenu();"><i class="fa fa-times" aria-hidden="true"></i></span>
+    
+    	<div id="pageMain">
+    		<h1>Request FIRMS Map Key</h1>
+    		<div>
+				<p>
+    				Due to heavy server resource demand when generating data, MAP_KEY is needed in order to process your request.
+        		</p>
+        		<p>
+					MAP_KEY limit is <b>5000 transactions / 10-minute interval</b>.<br/>
+					Larger transactions may count as multiple requests (ex. requesting 7 days).<br/>
+					Contact us if you need limit increase.
+        		</p>
+        		<div style="text-align: center;margin-top:3rem;">
+        			<input type="text" id="teVal" placeHolder="email address" style="width:33rem;"><br><br>
+	        		<div id="error_msg" class="mkErr"></div><br>
+        			<div class="mkBtn" onclick="modal_mmk.getKey();">Get MAP Key</div>
+        		</div>
+			</div>
+    	</div>  	
+    	
+		<div id="pageConfirmation">
+    		<h1>FIRMS WMS Map Key</h1>
+    		<div>
+        		<p id="pageConfirmationText" style="font-weight:600;margin-top:4.5rem;">        			
+        		</p>
+        		<div style="text-align: center;margin-top:20rem;">
+        			<div class="mkBtn" onclick="modal_mmk.closeMenu();">Close</div>
+        		</div>
+			</div>
+    	</div>  	
+  	
+	<div id="pageOptions">
+    		<h1>FIRMS WMS Map Key</h1>
+    		<div style="line-height:3rem;">
+				<p>
+    				Email is already registered.
+        		</p>
+        		<p>
+        			<b>Please select option:</b>
+        			<ul style="list-style-type:none;margin-left:8rem;">
+        				<li><input type="radio" name="optAct" value="GET" checked>Email current Map Key</li>
+        				<li><input type="radio" name="optAct" value="PUT">Generate new Map Key</li>
+        				<li><input type="radio" name="optAct" value="DELETE">Remove Map Key</li>
+        			</ul>        			
+        		</p>
+        		<br>
+        		<div style="text-align: center;margin-top:3rem;">
+        			<div class="mkBtn" onclick="modal_mmk.updateKey();">Proceed</div>
+        		</div>
+			</div>
+    	</div>  	
+  	
+  	</div>
+
+  </div>
+</div>
+
+<script>
+var modal_mmk = {
+
+		pages : ['pageMain', 'pageConfirmation', 'pageOptions'],		
+
+        init : function () {
+            modal_mmk.setContent('pageMain', '');            
+        },
+        
+        closeMenu : function () {
+			modal_mmk.setContent('pageMain', '');
+			utils.hide('modal_mapkey');
+            document.querySelector('body').style.overflow = "auto";
+        },
+
+
+        openMenu : function () {
+			utils.show('modal_mapkey');
+			document.querySelector('body').style.overflow = "hidden";
+			document.getElementById('teVal').focus();
+        },
+
+        getKey : function () {
+			var email = document.getElementById('teVal').value;
+        	if (utils.checkEmail(email)) {
+        		modal_mmk.setError(false);
+        		modal_mmk.requestMapKey(email, "POST");
+        		
+        	} else {
+            	modal_mmk.setError(true, "Invalid email address");
+        	} 
+        },
+
+        updateKey : function () {
+            var email = document.getElementById('teVal').value;
+        	if (utils.checkEmail(email)) {
+        		var action = document.querySelector('input[name="optAct"]:checked').value;
+        		modal_mmk.requestMapKey(email, action);
+        	} else {
+            	modal_mmk.closeMenu();
+        	}
+        	
+        },
+
+        setError : function (display, msg) {
+            var el = document.getElementById('error_msg'); 
+            el.style.display='none';
+
+            if (msg != "") {
+                if (display) {
+                    el.innerHTML = msg;
+                    el.style.display='block';
+                }
+            }
+        },
+
+        requestMapKey : function (email, action) {
+
+			var site = (window.location.pathname.indexOf('/usfs/')>=0) ? 'fs' : 'firms';
+			var data = { 	"email"        	: email,
+							"site"		 	: site,
+							"action"		: action };
+			fetch('/api/map_key_setup/', {
+            	method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+			.then((response) => response.text())
+			.then((data) => {
+				if (data.indexOf('error-') >= 0) {
+					modal_mmk.setContent("pageConfirmation", data.replace('error-', ''));
+				} else {
+					if (data == 'options') {
+						modal_mmk.setContent("pageOptions", '');
+					} else {             
+						modal_mmk.setContent("pageConfirmation", data);
+					}
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+        },
+
+        setContent : function (cont, text) {
+            for (var i=0; i<modal_mmk.pages.length; i++) {
+                if (modal_mmk.pages[i] == cont) {
+                    utils.show(modal_mmk.pages[i]);
+                    if (text != '' && document.getElementById(modal_mmk.pages[i] + 'Text')) {
+                        document.getElementById(modal_mmk.pages[i] + 'Text').innerHTML = text;
+                    }
+                } else {
+                    utils.hide(modal_mmk.pages[i]);
+                }
+            }
+        }
+}
+
+</script>
+</body>
+<script>
+let apiName = 'area';let area = '-119.5,33.5,-117.5,34.5';    let range = '1';
+    let source = 'VIIRS_SNPP_NRT';
+
+    function setValues() {
+        if (range == '') { range = '1';}
+        if (source == '') {source = 'VIIRS_SNPP_NRT'; }
+        if (apiName == 'country') {
+            if (country == '') { country= 'USA';}
+            utils.setSelectValue('country', country);
+        }
+        utils.setSelectValue('range', range);
+        utils.setSelectValue('source', source.toUpperCase());
+    }
+    function generateUrl(obj, type) {
+        let geo = 'world';
+        if (apiName == 'country') {
+            geo = obj.country;
+        } else if (apiName == 'area' || apiName == 'area_static_fires') {
+            if (obj.areaParams && obj.areaParams.isValid) {
+                geo = obj.area;
+            }
+        }
+        return '/api/area/'+type+'/' + obj.mapkey + '/' + obj.source + '/' + geo + '/' + obj.range;       
+    }
+    function updateCSVUrl() {
+        let obj = getParams();
+        //console.log(obj);
+        let mapkey = (obj.isMapkeyValid) ? obj.mapkey : '[MAP_KEY]';
+        let url = generateUrl(obj, 'csv');
+        if (obj.date && obj.date != '0' && obj.isDateValid) {
+            url += '/' + obj.date;
+        }
+        let csvlink = document.getElementById('csvUrl');
+        if (obj.isMapkeyValid) {
+            csvlink.innerHTML = '<a href="' + url + '" target="_blank">' + url + '</a>';
+        } else {
+            csvlink.innerHTML = url;
+        }
+        document.getElementById('transactionAmount').innerHTML = '<br/>Mapkey transaction amount: ' + computeWeight(obj);
+    }
+    function computeWeight(obj) {
+        let src = (obj.source.indexOf('VIIRS') >= 0 ) ? 2 : 0.5;
+        if (apiName == 'country') {
+            return Math.ceil(weight[obj.country] * src * obj.range);
+        } else if (apiName == 'area' || apiName == 'area_static_fires') {
+            if (obj.areaParams && obj.areaParams.isValid) {
+                let p = obj.areaParams;
+                let x = Math.ceil((p.east - p.west) / 60.0);
+                let y = Math.ceil((p.north - p.south) / 60.0);
+                return Math.ceil(x * y * src * obj.range)
+            }
+            return 0;
+        }
+        return Math.ceil(src * obj.range);
+    }
+    function getAreaValues(area) {
+        let obj = {};
+        obj.west = -180;
+        obj.east = 180;
+        obj.north = 90;
+        obj.south = -90;
+        obj.isValid = true;
+        if (area.toLowerCase() == 'world') { return obj; }
+        let arr = area.split(',');
+        if (arr.length != 4) { obj.isValid = false; return obj; }
+        for (let i=0; i<4; i++) {
+            let val = Number(arr[i]);
+            if ((i==0 || i == 2) && (val < -180 || val > 180)) { obj.isValid = false; return obj;}
+            if ((i==1 || i == 3) && (val < -90 || val > 90)) { obj.isValid = false; return obj;}
+        }
+        obj.west = Number(arr[0]);
+        obj.south = Number(arr[1]);
+        obj.east = Number(arr[2]);
+        obj.north = Number(arr[3]);
+        return obj;
+    }
+    function getParams() {
+        let obj = {};
+        obj.range = utils.getSelectValue('range');
+        obj.source = utils.getSelectValue('source');
+        if (apiName == 'country') {
+            obj.country = utils.getSelectValue('country');
+        } else if (apiName == 'area' || apiName == 'area_static_fires') {
+            obj.area = document.getElementById('area').value;
+            obj.areaParams = getAreaValues(obj.area);
+        }
+        obj.mapkey = document.getElementById('mapkey2').value;
+        obj.date = document.getElementById('date').value;
+        obj.isDateValid = true;
+        obj.isMapkeyValid = true;
+        if (obj.date && obj.date != '0') {
+            let arr = obj.date.split('-');
+            if (arr[0]<2000 || arr[1]>2100 || arr[1] < 0 || arr[1] > 12 || arr[2] < 0 || arr[2] > 31) {
+                obj.isDateValid  = false;
+            }
+        }
+        let exp = /^([0-9]|[a-z])+([0-9a-z]+)$/i;
+        if(!obj.mapkey.match(exp) || obj.mapkey.length != 32) {
+            obj.isMapkeyValid = false;
+            obj.mapkey = '';
+        }
+        return obj;
+    }
+    function search () {
+        utils.hide('error');
+        let obj = getParams();
+        
+        if (! obj.isMapkeyValid) {
+            document.getElementById('errorMsg').innerHTML = 'Invalid mapkey value.';
+            utils.show('error');
+            return;
+        }
+        if (! obj.isDateValid) {
+            document.getElementById('errorMsg').innerHTML = 'Invalid date value.';
+            utils.show('error');
+            return;
+        }
+
+        let url = generateUrl(obj, 'html');
+        if (obj.date && obj.date != '0') {
+            url += '/' + obj.date;
+        }
+        utils.hide('searchOptions');
+        utils.hide('results');
+        utils.show('searching');
+        window.location = url;
+
+    }
+
+    function pageLoaded() {
+        setValues();
+        updateCSVUrl();
+        modal_mmk.init();
+    }
+
+    // MAPKEY
+    function openMapKeyMenu() {
+		modal_mmk.openMenu();
+	}
+	
+</script>

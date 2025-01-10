@@ -52,7 +52,6 @@ average <- "30"
 # Filter sensors active during time period
 filtered_sensors_sf <- purpleairs_sf %>%
   filter(last_seen >= start_date_utc, date_created <= end_date_utc, location_type==0) %>%
-  select(sensor_index, location_type) %>%
   st_drop_geometry()
 
 # Download hourly data
