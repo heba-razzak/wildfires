@@ -1,5 +1,6 @@
 # Load libraries
 library(sf)            # Spatial data manipulation
+library(here)          # Robust file paths
 library(dplyr)         # Data manipulation
 library(dotenv)        # Load env variables
 library(leaflet)       # Interactive maps
@@ -169,10 +170,8 @@ m <- leaflet() %>%
   )
 
 # Save html map
-saveWidget(m,
-           file = "maps/purpleair-map.html",
-           selfcontained = TRUE)
+saveWidget(m, file = here("maps", "purpleair-map.html"), selfcontained = TRUE)
 
 # Save last updated time
 currenttime_la <- format(current_time_la, "%d %b %Y, %I:%M %p %Z")
-writeLines(currenttime_la, "maps/latest_update.txt")
+writeLines(currenttime_la, here("maps", "latest_update.txt"))
