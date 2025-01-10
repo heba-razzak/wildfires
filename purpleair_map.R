@@ -97,19 +97,35 @@ map_data <- map_data %>% mutate(aqi = case_when(
   TRUE ~ "Hazardous"
 ))
 
-# Define custom colors for AQI levels
-aqi_colors <- c(
-  "Good" = "#00e400",
-  "Moderate" = "#ffff00",
-  "Unhealthy for Sensitive Groups" = "#ff7e00",
-  "Unhealthy" = "#ff0000",
-  "Very Unhealthy" = "#8f3f97",
-  "Hazardous" = "#7e0023"
+# Define the levels first to ensure consistent ordering
+aqi_levels <- c(
+  "Good",
+  "Moderate",
+  "Unhealthy for Sensitive Groups",
+  "Unhealthy",
+  "Very Unhealthy",
+  "Hazardous"
 )
+
+# Define colors in the same order as levels
+aqi_colors <- c(
+  "#00e400",  # Good
+  "#ffff00",  # Moderate
+  "#ff7e00",  # Unhealthy for Sensitive Groups
+  "#ff0000",  # Unhealthy
+  "#8f3f97",  # Very Unhealthy
+  "#7e0023"   # Hazardous
+)
+
+# Convert `aqi` to a factor with the correct order
+map_data <- map_data %>%
+  mutate(aqi = factor(aqi, levels = aqi_levels))
+
 # Create a categorical palette for AQI
 aqi_pal <- colorFactor(
   palette = aqi_colors,
-  domain = map_data$aqi  # Ensure the AQI levels are used
+  domain = aqi_levels,  # Use the ordered levels
+  ordered = TRUE
 )
 
 # Corresponding marker sizes (matching the order of the factor levels)
@@ -145,10 +161,9 @@ m <- leaflet() %>%
                      Updated %s",pm2.5_alt, time_ago),
                    label = ~sprintf(
                      "PM2.5: %.1f μg/m³, %s",pm2.5_alt, time_ago)) %>%
-  # Add color legend for AQI
   addLegendFactor(
     pal = aqi_pal,
-    values = map_data$aqi,
+    values = factor(aqi_levels, levels = aqi_levels),  # Ensure ordered factor
     title = "Air Quality Index",
     position = "bottomleft",
     shape = "circle",
