@@ -60,8 +60,9 @@ get_confidence_opacity <- function(confidence) {
 m <- leaflet() %>%
   addProviderTiles("CartoDB") %>%
   # Add fire points
-  addCircleMarkers(
-    data = firms_sf,
+  # addCircleMarkers(
+  addCircles(
+      data = firms_sf,
     radius = 10,
     color = ~frp_pal(pmin(frp, 300)),
     fillColor = ~frp_pal(pmin(frp, 300)),

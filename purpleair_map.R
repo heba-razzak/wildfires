@@ -54,6 +54,31 @@ filtered_sensors_sf <- purpleairs_sf %>%
   filter(last_seen >= start_date_utc, date_created <= end_date_utc, location_type==0) %>%
   st_drop_geometry()
 
+# Split sensor list into smaller chunks
+chunk_size <- 50  # Adjust this number based on what works
+sensor_chunks <- split(unique(filtered_sensors_sf$sensor_index),
+                       ceiling(seq_along(unique(filtered_sensors_sf$sensor_index))/chunk_size))
+purpleair_rawdata_list <- list()
+
+for (i in seq_along(sensor_chunks)) {
+  message("Processing chunk ", i, " of ", length(sensor_chunks))
+  # Download hourly data
+  chunk_data <- tryCatch({
+    getSensorHistory(
+      sensorIndex = sensor_chunks[[i]],
+      apiReadKey = api_key,
+      startDate = start_date_utc,
+      endDate = end_date_utc,
+      average = average,
+      fields = fields
+    )
+  }, error = function(e) {
+    message("Error in chunk ", i, ": ", e$message)
+    return(data.frame())  # Return an empty data frame on error
+  })
+  purpleair_rawdata_list[[i]] <- chunk_data
+  Sys.sleep(1)
+}
 # # Download hourly data
 # purpleair_rawdata <- getSensorHistory(
 #   sensorIndex = unique(filtered_sensors_sf$sensor_index),
@@ -63,35 +88,6 @@ filtered_sensors_sf <- purpleairs_sf %>%
 #   average = average,
 #   fields = fields
 # )
-
-# Add error handling wrapper right after your library calls
-safely_getSensorHistory <- function(...) {
-  tryCatch({
-    PurpleAirAPI::getSensorHistory(...)
-  }, error = function(e) {
-    message("Error in getSensorHistory: ", e$message)
-    return(data.frame())  # Return empty dataframe on error
-  })
-}
-
-# Then modify your data download section to use chunked downloads
-# Split sensor list into smaller chunks
-chunk_size <- 50  # Adjust this number based on what works
-sensor_chunks <- split(unique(filtered_sensors_sf$sensor_index),
-                       ceiling(seq_along(unique(filtered_sensors_sf$sensor_index))/chunk_size))
-
-# Download data in chunks
-purpleair_rawdata <- do.call(rbind, lapply(sensor_chunks, function(chunk) {
-  Sys.sleep(1)  # Add small delay between chunks
-  safely_getSensorHistory(
-    sensorIndex = chunk,
-    apiReadKey = api_key,
-    startDate = start_date_utc,
-    endDate = end_date_utc,
-    average = average,
-    fields = fields
-  )
-}))
 
 # Add LA Timestamp, Time Ago, radius calc
 purpleair_data <- purpleair_rawdata %>%
