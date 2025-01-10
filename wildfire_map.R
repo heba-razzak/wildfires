@@ -26,35 +26,49 @@ url <- paste0("https://firms.modaps.eosdis.nasa.gov/api/area/csv/",
               confidence, "/", date)
 
 # Fetch the data
-response <- GET(url, write_disk("data/FIRMS_Data.csv", overwrite = TRUE))
+response <- GET(url, write_disk("/Users/heba/Documents/GitHub/wildfires/data/FIRMS_Data.csv", overwrite = TRUE))
 
 # Check the response and load data
 if (status_code(response) == 200) {
   message("Data downloaded successfully!")
-  firms_data <- read.csv("data/FIRMS_Data.csv")
+  firms_data <- read.csv("/Users/heba/Documents/GitHub/wildfires/data/FIRMS_Data.csv")
 } else {
   stop("Failed to download data. Check your API key or parameters.")
 }
 
+firms_data <- firms_data %>% mutate(
+  frp_opacity = case_when(
+    frp <= 10 ~ 0.5,
+    frp <= 20 ~ 0.7,
+    TRUE ~ 1
+  ))
+# ######## ######## ######## ######## ######## ######## ######## ######## ######
+# EDA
+#
+# numeric_cols <- names(firms_data)[sapply(firms_data, is.numeric)]
+# numeric_cols <- setdiff(numeric_cols, c("latitude", "longitude"))
+# # Loop through the columns and plot histograms
+# for (col in numeric_cols) {
+#   x <- firms_data[[col]]
+#
+#   # If max is much larger than the 99th percentile, filter the data for plotting
+#   p99 <- quantile(x, 0.99, na.rm = TRUE)
+#   if (max(x, na.rm = TRUE) > 2 * p99) {
+#     x <- x[x >= quantile(x, 0.01, na.rm = TRUE) & x <= p99]
+#   }
+#   hist(x, main = paste("Histogram of", col))
+# }
+#
+# non_numeric_cols <- setdiff(names(firms_data), c(numeric_cols, "latitude", "longitude"))
+#
+# for (col in non_numeric_cols) {
+#   # Plot the histogram using barplot for categorical data
+#   barplot(table(firms_data[[col]]), main = paste("Histogram of", col), ylab = "Frequency")
+# }
+# ######## ######## ######## ######## ######## ######## ######## ######## ######
+
 # Convert data to sf object
 firms_sf <- st_as_sf(firms_data, coords = c("longitude", "latitude"), crs = 4326)
-
-# FRP colors
-frp_pal <- colorNumeric(
-  palette = c("yellow", "orange", "red"),
-  domain = c(0, 300),
-  na.color = "#000000"
-)
-
-# Function to get opacity based on confidence
-get_confidence_opacity <- function(confidence) {
-  case_when(
-    confidence == "l" ~ 0.6,  # Low confidence
-    confidence == "n" ~ 0.8,  # Nominal confidence
-    confidence == "h" ~ 1.0,  # High confidence
-    TRUE ~ 0.5                # Default
-  )
-}
 
 # Create map
 m <- leaflet() %>%
@@ -62,13 +76,14 @@ m <- leaflet() %>%
   # Add fire points
   # addCircleMarkers(
   addCircles(
-      data = firms_sf,
-    radius = 10,
-    color = ~frp_pal(pmin(frp, 300)),
-    fillColor = ~frp_pal(pmin(frp, 300)),
-    fillOpacity = ~get_confidence_opacity(confidence),
+    data = firms_sf,
+    radius = 150,
+    color = "#000000",
+    fillColor = "orange",
+    fillOpacity = ~frp_opacity,
+    opacity = ~frp_opacity,
     stroke = TRUE,
-    weight = 1,
+    weight = 2,
     popup = ~sprintf(
       "<strong>VIIRS Fire Detection</strong><br/>
       FRP: %.1f MW",
