@@ -16,14 +16,13 @@ MAP_KEY <- Sys.getenv("MAP_KEY")
 # Parameters
 dataset <- "VIIRS_SNPP_NRT"
 bbox <- c(xmin = -120, ymin = 33, xmax = -117, ymax = 35)  # LA region
-confidence <- 1
-date <- format(Sys.time(), tz = "UTC", "%Y-%m-%d")
+ndays <- 1
 
-# Construct the URL
+# Construct the URL - https://firms.modaps.eosdis.nasa.gov/api/area/
 url <- paste0("https://firms.modaps.eosdis.nasa.gov/api/area/csv/",
               MAP_KEY, "/", dataset, "/",
               bbox["xmin"], ",", bbox["ymin"], ",", bbox["xmax"], ",", bbox["ymax"], "/",
-              confidence, "/", date)
+              ndays)
 
 # Fetch the data
 response <- GET(url, write_disk("/Users/heba/Documents/GitHub/wildfires/data/FIRMS_Data.csv", overwrite = TRUE))
@@ -36,12 +35,6 @@ if (status_code(response) == 200) {
   stop("Failed to download data. Check your API key or parameters.")
 }
 
-firms_data <- firms_data %>% mutate(
-  frp_opacity = case_when(
-    frp <= 10 ~ 0.5,
-    frp <= 20 ~ 0.7,
-    TRUE ~ 1
-  ))
 # ######## ######## ######## ######## ######## ######## ######## ######## ######
 # EDA
 #
@@ -73,34 +66,21 @@ firms_sf <- st_as_sf(firms_data, coords = c("longitude", "latitude"), crs = 4326
 # Create map
 m <- leaflet() %>%
   addProviderTiles("CartoDB") %>%
-  # Add fire points
-  # addCircleMarkers(
-  addCircles(
-    data = firms_sf,
-    radius = 150,
-    color = "#000000",
-    fillColor = "orange",
-    fillOpacity = ~frp_opacity,
-    opacity = ~frp_opacity,
-    stroke = TRUE,
-    weight = 2,
-    popup = ~sprintf(
-      "<strong>VIIRS Fire Detection</strong><br/>
-      FRP: %.1f MW",
-      frp
-    )
-  ) %>%
-  # Add FRP color legend
-  addLegend(
-    position = "bottomright",
-    pal = frp_pal,
-    values = c(0, 300),
-    title = "Fire Radiative Power (MW)",
-    bins = 6,
-    labFormat = labelFormat(
-      transform = function(x) sort(c(0, 50, 100, 150, 200, 250, 300))
-    )
-  )
+  addCircles(data = firms_sf,
+             fillColor = "red",
+             fillOpacity = 0.5,
+             weight = 0,
+             radius = 400) %>%
+  addCircles(data = firms_sf,
+             fillColor = "red",
+             fillOpacity = 0.5,
+             weight = 0,
+             radius = 300) %>%
+  addCircles(data = firms_sf,
+             fillColor = "red",
+             fillOpacity = 1,
+             weight = 0,
+             radius = 200)
 m
 # Save the map
 saveWidget(m, file = "maps/wildfire-map.html", selfcontained = TRUE)
