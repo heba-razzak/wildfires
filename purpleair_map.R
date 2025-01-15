@@ -48,12 +48,12 @@ active_sensors <- purpleairs_sf %>%
 # fields <- c("pm2.5_alt", "humidity", "temperature", "pressure", "rssi",
 #             "uptime", "memory", "analog_input")
 fields <- c("pm2.5_alt", "temperature", "humidity")
-# Start date: 24 hours ago
-start_date_utc <- end_date_utc - minutes(30)
+
 # End date: now
 end_date_utc <- with_tz(Sys.time(), "UTC")
 timestamp_la <- with_tz(as.POSIXct(end_date_utc, "UTC"), tz_la)
-
+# Start date: 24 hours ago
+start_date_utc <- end_date_utc - minutes(30)
 # Real time
 average <- "0"
 
@@ -172,4 +172,3 @@ saveWidget(m, file = here("maps", "purpleair-map.html"), selfcontained = TRUE)
 
 writeLines(format(current_time_la, "%d %b %Y, %I:%M %p %Z"),
            here("maps", "latest_update.txt"))
-
